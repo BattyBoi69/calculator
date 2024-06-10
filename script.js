@@ -26,6 +26,10 @@ function operate(a, b, op) {
 }
 
 function updateDisplay(number = "") {
+	if (displayNumber[displayNumberSelector] === "error") {
+		document.querySelector("#display").textContent = displayNumber[displayNumberSelector];
+		return;
+	}
 	let displayLength = displayNumber[displayNumberSelector].length;
 
 	// Check display has space and non empty
@@ -43,6 +47,16 @@ function updateDisplay(number = "") {
 
 function equals() {
 	//Assume displayNumber is filled
+	let a, b;
+	[a, b] = displayNumber;
+	let result = selectedOperator(+a, +b).toString();
+	if (result.length > 8) {
+		displayNumber = ["error", "0"];
+	} else {
+		displayNumber = [result, "0"];
+	}
+	displayNumberSelector = 0;
+	updateDisplay();
 }
 
 
@@ -72,3 +86,7 @@ btnOperators.forEach( operator => {
 		displayNumberSelector = 1;
 	})
 });
+
+let btnEquals = document.querySelector(".equals");
+
+btnEquals.addEventListener("click", equals);
