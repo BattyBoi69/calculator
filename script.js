@@ -1,5 +1,5 @@
 let displayNumber = ["0","0"];
-let displayNumberSelector = 0;
+let dNS = 1; //displayNumberSelector
 let selectedOperator;
 
 updateDisplay();
@@ -26,36 +26,35 @@ function operate(a, b, op) {
 }
 
 function updateDisplay(number = "") {
-	if (displayNumber[displayNumberSelector] === "error") {
-		document.querySelector("#display").textContent = displayNumber[displayNumberSelector];
+	if (displayNumber[dNS] === "error") {
+		document.querySelector("#display").textContent = displayNumber[dNS];
 		return;
 	}
-	let displayLength = displayNumber[displayNumberSelector].length;
+	let displayLength = displayNumber[dNS].length;
 
 	// Check display has space and non empty
 	if (displayLength < 8 && (!(number === "0") || displayLength > 0)) {
 
 		// Check display is not 0 before appending digits
-		if (!(number === "") && displayNumber[displayNumberSelector] === "0") {
-			displayNumber[displayNumberSelector] = number;
+		if (!(number === "") && displayNumber[dNS] === "0") {
+			displayNumber[dNS] = number;
 		} else {
-			displayNumber[displayNumberSelector] += number;
+			displayNumber[dNS] += number;
 		}
-		document.querySelector("#display").textContent = displayNumber[displayNumberSelector];
+		document.querySelector("#display").textContent = displayNumber[dNS];
 	}
 }
 
 function equals() {
 	//Assume displayNumber is filled
+
+	if (displayNumber[0] === "error") return;
+
 	let a, b;
 	[a, b] = displayNumber;
 	let result = selectedOperator(+a, +b).toString();
-	if (result.length > 8) {
-		displayNumber = ["error", "0"];
-	} else {
-		displayNumber = [result, "0"];
-	}
-	displayNumberSelector = 0;
+	dNS = 0;
+	displayNumber[dNS] = result.length > 8 ? "error" : result;
 	updateDisplay();
 }
 
@@ -69,6 +68,19 @@ let btnOperators = document.querySelectorAll(".operator");
 
 btnOperators.forEach( operator => {
 	operator.addEventListener("click", () => {
+
+		if (displayNumber[dNS] === "error") return;
+
+		// Using operator instead of equals
+		if (dNS === 1 && selectedOperator) {
+			equals();
+			if (displayNumber[dNS] === "error") return;
+		} 
+		// First time pressing the operator button
+		else if (dNS === 1) {
+			displayNumber[0] = displayNumber[1];
+		}
+
 		switch(operator.textContent) {
 			case "+":
 				selectedOperator = add;
@@ -83,7 +95,8 @@ btnOperators.forEach( operator => {
 				selectedOperator = divide;
 				break;
 		}
-		displayNumberSelector = 1;
+		dNS = 1;
+		displayNumber[dNS] = "0";
 	})
 });
 
