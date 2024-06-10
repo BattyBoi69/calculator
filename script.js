@@ -19,3 +19,13 @@ let firstNumber, secondNumber, operator;
 function operate(a, b, operator) {
 	return operator(a, b);
 }
+
+function updateDisplay(number) {
+	document.querySelector("#display").textContent += number;
+}
+
+
+let btnNumbers = document.querySelectorAll(".number");
+
+btnNumbers.forEach( number => {
+	number.addEventListener('click', () => updateDisplay(number.textContent))});
