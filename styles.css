@@ -1,7 +1,7 @@
 @font-face {
-   font-family: "digitalseven";
-   src: url(./fonts/d7monoitalic.ttf);
-	 /* Style-7 http://www.styleseven.com */
+	font-family: "digitalseven";
+	src: url("./fonts/d7monoitalic.ttf") format('truetype');
+	/* Style-7 http://www.styleseven.com */
 }
 
 body {
