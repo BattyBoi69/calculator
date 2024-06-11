@@ -9,6 +9,16 @@ let btnEquals = document.querySelector("#equals");
 let btnAllClear = document.querySelector("#all-clear");
 let btnOperators = document.querySelectorAll(".operator");
 
+let btnClear = document.querySelector("#clear");
+let btnDot = document.querySelector("#dot");
+let btnEvals = document.querySelectorAll(".eval");
+let btnOff = document.querySelector("#off");
+
+let btnMemClear = document.querySelector("#m-clear");
+let btnMemRead = document.querySelector("#m-read");
+let btnMemPlus = document.querySelector("#m-plus");
+let btnMemMinus = document.querySelector("#m-minus");
+
 btnNumbers.forEach( number => {
 	number.addEventListener("click", () => updateDisplay(number.textContent))});
 
@@ -56,6 +66,22 @@ btnOperators.forEach( operator => {
 });
 
 
+btnClear.classList.add("todo");
+btnDot.classList.add("todo");
+btnEvals.forEach( item => item.classList.add("todo") );
+btnOff.classList.add("todo");
+
+btnMemClear.classList.add("todo");
+btnMemRead.classList.add("todo");
+btnMemPlus.classList.add("todo");
+btnMemMinus.classList.add("todo");
+
+let btnFutureFeatres = document.querySelectorAll(".todo");
+btnFutureFeatres.forEach( button => {
+	button.addEventListener("click", () => {
+		alert("Feature not ready");
+	})
+});
 
 function add(a, b) {
 	return a + b;
