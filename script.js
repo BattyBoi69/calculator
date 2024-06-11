@@ -126,14 +126,24 @@ function updateDisplay(number = "") {
 }
 
 function equals() {
-	//Assume displayNumber is filled
-
 	if (displayNumber[0] === "error") return;
+
+	let display = document.querySelector("#display");
+	
+	if (!selectedOperator) {
+		display.textContent = ""; //flashing effect
+		setTimeout( () => {
+			display.textContent = displayNumber[dNP];
+			displayNumber = ["0", "0"];
+		}, 100 );
+		return;
+	}
 
 	let a, b;
 	[a, b] = displayNumber;
 	let result = selectedOperator(+a, +b).toString();
 	dNP = 0;
 	displayNumber[dNP] = result.length > 8 ? "error" : result;
-	updateDisplay();
-}
+	display.textContent = ""; //flashing effect
+	setTimeout(updateDisplay , 100);
+	}
