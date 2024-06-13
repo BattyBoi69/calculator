@@ -109,7 +109,7 @@ function updateDisplay(number = "") {
 		document.querySelector("#display").textContent = displayNumber[dNP];
 		return;
 	}
-	let displayLength = displayNumber[dNP].length;
+	let displayLength = displayNumber[dNP].replace("-","").length;
 
 	// Check display has space and non empty
 	if ((displayLength < 8 && (!(number === "0") || displayLength > 0))
@@ -131,9 +131,10 @@ function equals() {
 	let display = document.querySelector("#display");
 	
 	if (!selectedOperator) {
+		displaceHolder = display.textContent;
 		display.textContent = ""; //flashing effect
 		setTimeout( () => {
-			display.textContent = displayNumber[dNP];
+			display.textContent = displaceHolder;
 			displayNumber = ["0", "0"];
 		}, 100 );
 		return;
@@ -143,7 +144,7 @@ function equals() {
 	[a, b] = displayNumber;
 	let result = selectedOperator(+a, +b).toString();
 	dNP = 0;
-	displayNumber[dNP] = result.length > 8 ? "error" : result;
+	displayNumber[dNP] = result.replace("-","").length > 8 ? "error" : result;
 	display.textContent = ""; //flashing effect
 	setTimeout(updateDisplay , 100);
 	}
