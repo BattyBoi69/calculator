@@ -19,6 +19,24 @@ let btnMemRead = document.querySelector("#m-read");
 let btnMemPlus = document.querySelector("#m-plus");
 let btnMemMinus = document.querySelector("#m-minus");
 
+btnClear.classList.add("todo");
+btnDot.classList.add("todo");
+btnEvals.forEach( item => item.classList.add("todo") );
+btnOff.classList.add("todo");
+
+btnMemClear.classList.add("todo");
+btnMemRead.classList.add("todo");
+btnMemPlus.classList.add("todo");
+btnMemMinus.classList.add("todo");
+
+let btnFutureFeatres = document.querySelectorAll(".todo");
+btnFutureFeatres.forEach( button => {
+	button.addEventListener("click", () => {
+		alert("Feature not ready");
+	})
+});
+
+
 btnNumbers.forEach( number => {
 	number.addEventListener("click", () => updateDisplay(number.textContent))});
 
@@ -66,22 +84,58 @@ btnOperators.forEach( operator => {
 });
 
 
-btnClear.classList.add("todo");
-btnDot.classList.add("todo");
-btnEvals.forEach( item => item.classList.add("todo") );
-btnOff.classList.add("todo");
+function updateDisplay(number = "") {
+	if (displayNumber[dNP] === "error") {
+		document.querySelector("#display").textContent = displayNumber[dNP];
+		return;
+	}
+	if (isValidDisplay(displayNumber[dNP], number)) {
+		// Don't want the following e.g. 032, 00643
+		if (!(number === "") && displayNumber[dNP] === "0") {
+			displayNumber[dNP] = number;
+		} else {
+			displayNumber[dNP] += number;
+		}
+		document.querySelector("#display").textContent = displayNumber[dNP];
+	}
+}
 
-btnMemClear.classList.add("todo");
-btnMemRead.classList.add("todo");
-btnMemPlus.classList.add("todo");
-btnMemMinus.classList.add("todo");
+function isValidDisplay(display, input = "") {
+	let displayLength = display.replace("-","").length;
 
-let btnFutureFeatres = document.querySelectorAll(".todo");
-btnFutureFeatres.forEach( button => {
-	button.addEventListener("click", () => {
-		alert("Feature not ready");
-	})
-});
+	let isNotTooBig = (displayLength < 8 && (!(input === "0") || displayLength > 0))
+
+	let isJustUpdating = (displayLength <= 8 && input === "")
+
+	return 	isNotTooBig	|| isJustUpdating
+}
+
+function equals() {
+	if (displayNumber[0] === "error") return;
+
+	let display = document.querySelector("#display");
+	let displaceHolder;
+
+	if (!selectedOperator) {
+		displaceHolder = display.textContent;
+		display.textContent = ""; //flashing effect
+		setTimeout( () => {
+			display.textContent = displaceHolder;
+			displayNumber = ["0", "0"];
+		}, 100 );
+		return;
+	}
+
+	let a, b;
+	[a, b] = displayNumber;
+	let result = selectedOperator(+a, +b).toString();
+	dNP = 0;
+	displaceHolder = result.replace("-","").length > 8 ? "error" : result;
+	displayNumber[dNP] = displaceHolder;
+
+	display.textContent = ""; //flashing effect
+	setTimeout( () => {display.textContent = displaceHolder}, 100);
+}
 
 function add(a, b) {
 	return a + b;
@@ -104,47 +158,4 @@ function operate(a, b, op) {
 	return op(a, b);
 }
 
-function updateDisplay(number = "") {
-	if (displayNumber[dNP] === "error") {
-		document.querySelector("#display").textContent = displayNumber[dNP];
-		return;
-	}
-	let displayLength = displayNumber[dNP].replace("-","").length;
 
-	// Check display has space and non empty
-	if ((displayLength < 8 && (!(number === "0") || displayLength > 0))
-		|| (displayLength === 8 && number === "")) {
-
-		// Check display is not 0 before appending digits
-		if (!(number === "") && displayNumber[dNP] === "0") {
-			displayNumber[dNP] = number;
-		} else {
-			displayNumber[dNP] += number;
-		}
-		document.querySelector("#display").textContent = displayNumber[dNP];
-	}
-}
-
-function equals() {
-	if (displayNumber[0] === "error") return;
-
-	let display = document.querySelector("#display");
-	
-	if (!selectedOperator) {
-		displaceHolder = display.textContent;
-		display.textContent = ""; //flashing effect
-		setTimeout( () => {
-			display.textContent = displaceHolder;
-			displayNumber = ["0", "0"];
-		}, 100 );
-		return;
-	}
-
-	let a, b;
-	[a, b] = displayNumber;
-	let result = selectedOperator(+a, +b).toString();
-	dNP = 0;
-	displayNumber[dNP] = result.replace("-","").length > 8 ? "error" : result;
-	display.textContent = ""; //flashing effect
-	setTimeout(updateDisplay , 100);
-	}
