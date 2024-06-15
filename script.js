@@ -21,54 +21,20 @@ let btnMemPlus = document.querySelector("#m-plus");
 let btnMemMinus = document.querySelector("#m-minus");
 
 [btnClear, btnDot, btnOff, btnMemClear, btnMemRead, btnMemPlus, btnMemMinus, ...btnEvals].forEach(button => {
-    button.addEventListener("click", () => alert("Feature not ready"));
+	button.addEventListener("click", () => alert("Feature not ready"));
 });
 
 btnNumbers.forEach( number => {
 	number.addEventListener("click", () => updateDisplay(number.textContent))});
 
-btnEquals.addEventListener("click", equals);
+btnEquals.addEventListener("click", calculate);
 
-btnAllClear.addEventListener("click", () => {
-	displayValues = ["0", "0"];
-	currentIndex = 1;
-	currentOperator = undefined;
-	updateDisplay();
-});
+btnAllClear.addEventListener("click", resetCalculator);
 
 btnOperators.forEach( operator => {
-	operator.addEventListener("click", () => {
-
-		if (ERROR_DISPLAYS.includes(displayValues[currentIndex])) return;
-
-		// Using operator instead of equals
-		if (currentIndex === 1 && currentOperator) {
-			equals();
-			if (ERROR_DISPLAYS.includes(displayValues[currentIndex])) return;
-		} 
-		// First time pressing the operator button
-		else if (currentIndex === 1) {
-			displayValues[0] = displayValues[1];
-		}
-
-		switch(operator.textContent) {
-			case "+":
-				currentOperator = add;
-				break;
-			case "−":
-				currentOperator = subtract;
-				break;
-			case "×":
-				currentOperator = multiply;
-				break;
-			case "÷":
-				currentOperator = divide;
-				break;
-		}
-		currentIndex = 1;
-		displayValues[currentIndex] = "0";
-	})
+	operator.addEventListener("click", () => setOperator(operator.textContent))
 });
+
 
 
 function updateDisplay(number = "") {
@@ -76,7 +42,7 @@ function updateDisplay(number = "") {
 		document.querySelector("#display").textContent = displayValues[currentIndex];
 		return;
 	}
-	if (isValidDisplay(displayValues[currentIndex], number)) {
+	if (isValidInput(displayValues[currentIndex], number)) {
 		// Don't want the following e.g. 032, 00643
 		if (!(number === "") && displayValues[currentIndex] === "0") {
 			displayValues[currentIndex] = number;
@@ -87,7 +53,7 @@ function updateDisplay(number = "") {
 	}
 }
 
-function isValidDisplay(display, input = "") {
+function isValidInput(display, input = "") {
 	let displayLength = display.replace("-","").length;
 
 	let isNotTooBig = (displayLength < 8 && (!(input === "0") || displayLength > 0))
@@ -97,35 +63,73 @@ function isValidDisplay(display, input = "") {
 	return 	isNotTooBig	|| isJustUpdating
 }
 
-function equals() {
+function setOperator(operator) {
+	if (ERROR_DISPLAYS.includes(displayValues[currentIndex])) return;
+
+	// Using operator instead of equals
+	if (currentIndex === 1 && currentOperator) {
+		calculate();
+		if (ERROR_DISPLAYS.includes(displayValues[currentIndex])) return;
+	} 
+	// First time pressing the operator button
+	else if (currentIndex === 1) {
+		displayValues[0] = displayValues[1];
+	}
+
+	switch(operator) {
+		case "+":
+			currentOperator = add;
+			break;
+		case "−":
+			currentOperator = subtract;
+			break;
+		case "×":
+			currentOperator = multiply;
+			break;
+		case "÷":
+			currentOperator = divide;
+			break;
+	}
+	currentIndex = 1;
+	displayValues[currentIndex] = "0";
+}
+
+function resetCalculator() {
+	displayValues = ["0", "0"];
+	currentIndex = 1;
+	currentOperator = undefined;
+	updateDisplay();
+}
+
+function calculate() {
 	if (ERROR_DISPLAYS.includes(displayValues[0])) return;
 
 	let display = document.querySelector("#display");
-	let displaceHolder;
 
 	if (!currentOperator) {
-		displaceHolder = display.textContent;
-		display.textContent = ""; //flashing effect
-		setTimeout( () => {
-			display.textContent = displaceHolder;
-			displayValues = ["0", "0"];
-		}, 100 );
+		flashDisplay(display.textContent);
+		displayValues = ["0", "0"];
 		return;
 	}
 
 	let a, b;
 	[a, b] = displayValues;
 	let result = currentOperator(+a, +b)
-	result = typeof result === "String" ? result : displayRound(result).toString();
+	result = typeof result === "String" ? result : roundDisplay(result).toString();
 	currentIndex = 0;
-	displaceHolder = result.replace("-","").length > 8 ? "error" : result;
-	displayValues[currentIndex] = displaceHolder;
+	const displayValue = result.replace("-","").length > 8 ? "error" : result;
+	displayValues[currentIndex] = displayValue;
 
-	display.textContent = ""; //flashing effect
-	setTimeout( () => {display.textContent = displaceHolder}, 100);
+	flashDisplay(displayValue)
 }
 
-function displayRound(result) {
+function flashDisplay(value) {
+	const display = document.querySelector("#display");
+	display.textContent = "";
+	setTimeout( () => display.textContent = value, 100);
+}
+
+function roundDisplay(result) {
 	let resultString = result.toString().replace("-","");
 	if (!resultString.includes(".") || resultString.length <= 8) {
 		return result;
@@ -135,30 +139,12 @@ function displayRound(result) {
 	if (wholeLength > 6) {
 		return Math.round(result);
 	} else {
-		const tenIndex = (8-1) - wholeLength;
-		const tenDotMover = Math.pow(10,tenIndex);
-		return Math.round(result * tenDotMover) / tenDotMover;
+		const precision = (8-1) - wholeLength;
+		return Math.round(result * Math.pow(10,precision)) / Math.pow(10,precision);
 	}
 }
 
-function add(a, b) {
-	return a + b;
-}
-
-function subtract(a, b) {
-	return a - b;
-}
-
-function multiply(a, b) {
-	return a * b;
-}
-
-function divide(a, b) {
-	if (b === 0) return "motherfu";
-	return a / b;
-}
-
-
-function operate(a, b, op) {
-	return op(a, b);
-}
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => b === 0 ? "motherfu" : a / b;
