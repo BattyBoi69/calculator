@@ -1,6 +1,7 @@
 let displayNumber = ["0","0"];
 let dNP = 1; //displayNumberPointer
 let selectedOperator;
+const ERROR_DISPLAYS = ["error", "motherfu"]
 
 updateDisplay();
 
@@ -52,12 +53,12 @@ btnAllClear.addEventListener("click", () => {
 btnOperators.forEach( operator => {
 	operator.addEventListener("click", () => {
 
-		if (displayNumber[dNP] === "error") return;
+		if (ERROR_DISPLAYS.includes(displayNumber[dNP])) return;
 
 		// Using operator instead of equals
 		if (dNP === 1 && selectedOperator) {
 			equals();
-			if (displayNumber[dNP] === "error") return;
+			if (ERROR_DISPLAYS.includes(displayNumber[dNP])) return;
 		} 
 		// First time pressing the operator button
 		else if (dNP === 1) {
@@ -85,7 +86,7 @@ btnOperators.forEach( operator => {
 
 
 function updateDisplay(number = "") {
-	if (displayNumber[dNP] === "error") {
+	if (ERROR_DISPLAYS.includes(displayNumber[dNP])) {
 		document.querySelector("#display").textContent = displayNumber[dNP];
 		return;
 	}
@@ -111,7 +112,7 @@ function isValidDisplay(display, input = "") {
 }
 
 function equals() {
-	if (displayNumber[0] === "error") return;
+	if (ERROR_DISPLAYS.includes(displayNumber[0])) return;
 
 	let display = document.querySelector("#display");
 	let displaceHolder;
@@ -128,13 +129,30 @@ function equals() {
 
 	let a, b;
 	[a, b] = displayNumber;
-	let result = selectedOperator(+a, +b).toString();
+	let result = selectedOperator(+a, +b)
+	result = typeof result === "String" ? result : displayRound(result).toString();
 	dNP = 0;
 	displaceHolder = result.replace("-","").length > 8 ? "error" : result;
 	displayNumber[dNP] = displaceHolder;
 
 	display.textContent = ""; //flashing effect
 	setTimeout( () => {display.textContent = displaceHolder}, 100);
+}
+
+function displayRound(result) {
+	let resultString = result.toString().replace("-","");
+	if (!resultString.includes(".") || resultString.length <= 8) {
+		return result;
+	}
+	[whole, ...fraction] = resultString.split(".");
+	const wholeLength = whole.length;
+	if (wholeLength > 6) {
+		return Math.round(result);
+	} else {
+		const tenIndex = (8-1) - wholeLength;
+		const tenDotMover = Math.pow(10,tenIndex);
+		return Math.round(result * tenDotMover) / tenDotMover;
+	}
 }
 
 function add(a, b) {
@@ -150,6 +168,7 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
+	if (b === 0) return "motherfu";
 	return a / b;
 }
 
@@ -157,5 +176,3 @@ function divide(a, b) {
 function operate(a, b, op) {
 	return op(a, b);
 }
-
-
