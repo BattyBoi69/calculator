@@ -1,3 +1,19 @@
+const buttons = document.querySelectorAll(".buttons > *");
+const buttonsDiv = document.querySelector(".buttons");
+
+buttons.forEach(button => {
+	const div = document.createElement("div");
+	div.classList.add("button-wrapper");
+	if (button.classList.contains("top-row")) div.classList.add("top-row");
+	if (button.classList.contains("add")) div.classList.add("add");
+
+	div.appendChild(button);
+	
+	buttonsDiv.appendChild(div);
+
+	//button.parentNode.replaceChild(div, button);
+});
+
 let displayValues = ["0","0"];
 let currentIndex = 1; //displayValuesPointer
 let currentOperator;

@@ -4,6 +4,13 @@
 	/* Style-7 http://www.styleseven.com */
 }
 
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
 	background-color: lightblue;
 }
@@ -13,6 +20,8 @@ body {
 	width: 420px;
 	display: flex;
 	flex-direction: column;
+	background-color: #C8C6C4;
+	padding: 20px;
 }
 
 .buttons {
@@ -21,15 +30,27 @@ body {
 	height: 400px;
 }
 
-.buttons > * {
+.button-wrapper {
 	height: 70px;
+	padding: 10px;
 }
 
-.top-row {
+.button-wrapper > * {
+	border-radius: 8px 8px 20px 20px;
+	background-color: pink;
+	width: 100%;
+	height: 100%;
+}
+
+.button-wrapper > *:hover {
+	border: 5px solid black;
+}
+
+.button-wrapper.top-row {
 	height: 50px;
 }
 
-.add {
+.button-wrapper.add {
 	flex: 1;
 }
 
@@ -39,6 +60,7 @@ body {
 	height: 140px;
 	background-color: lightgreen;
 	display: flex;
-	align-items: flex-end;
-	flex-flow: column-reverse;
+	align-items: center;
+	justify-content: flex-end;
+	margin: 10px 20px 0px 20px;
 }
