@@ -1,6 +1,6 @@
-let displayNumber = ["0","0"];
-let dNP = 1; //displayNumberPointer
-let selectedOperator;
+let displayValues = ["0","0"];
+let currentIndex = 1; //displayValuesPointer
+let currentOperator;
 const ERROR_DISPLAYS = ["error", "motherfu"]
 
 updateDisplay();
@@ -20,23 +20,9 @@ let btnMemRead = document.querySelector("#m-read");
 let btnMemPlus = document.querySelector("#m-plus");
 let btnMemMinus = document.querySelector("#m-minus");
 
-btnClear.classList.add("todo");
-btnDot.classList.add("todo");
-btnEvals.forEach( item => item.classList.add("todo") );
-btnOff.classList.add("todo");
-
-btnMemClear.classList.add("todo");
-btnMemRead.classList.add("todo");
-btnMemPlus.classList.add("todo");
-btnMemMinus.classList.add("todo");
-
-let btnFutureFeatres = document.querySelectorAll(".todo");
-btnFutureFeatres.forEach( button => {
-	button.addEventListener("click", () => {
-		alert("Feature not ready");
-	})
+[btnClear, btnDot, btnOff, btnMemClear, btnMemRead, btnMemPlus, btnMemMinus, ...btnEvals].forEach(button => {
+    button.addEventListener("click", () => alert("Feature not ready"));
 });
-
 
 btnNumbers.forEach( number => {
 	number.addEventListener("click", () => updateDisplay(number.textContent))});
@@ -44,60 +30,60 @@ btnNumbers.forEach( number => {
 btnEquals.addEventListener("click", equals);
 
 btnAllClear.addEventListener("click", () => {
-	displayNumber = ["0", "0"];
-	dNP = 1;
-	selectedOperator = undefined;
+	displayValues = ["0", "0"];
+	currentIndex = 1;
+	currentOperator = undefined;
 	updateDisplay();
 });
 
 btnOperators.forEach( operator => {
 	operator.addEventListener("click", () => {
 
-		if (ERROR_DISPLAYS.includes(displayNumber[dNP])) return;
+		if (ERROR_DISPLAYS.includes(displayValues[currentIndex])) return;
 
 		// Using operator instead of equals
-		if (dNP === 1 && selectedOperator) {
+		if (currentIndex === 1 && currentOperator) {
 			equals();
-			if (ERROR_DISPLAYS.includes(displayNumber[dNP])) return;
+			if (ERROR_DISPLAYS.includes(displayValues[currentIndex])) return;
 		} 
 		// First time pressing the operator button
-		else if (dNP === 1) {
-			displayNumber[0] = displayNumber[1];
+		else if (currentIndex === 1) {
+			displayValues[0] = displayValues[1];
 		}
 
 		switch(operator.textContent) {
 			case "+":
-				selectedOperator = add;
+				currentOperator = add;
 				break;
 			case "−":
-				selectedOperator = subtract;
+				currentOperator = subtract;
 				break;
 			case "×":
-				selectedOperator = multiply;
+				currentOperator = multiply;
 				break;
 			case "÷":
-				selectedOperator = divide;
+				currentOperator = divide;
 				break;
 		}
-		dNP = 1;
-		displayNumber[dNP] = "0";
+		currentIndex = 1;
+		displayValues[currentIndex] = "0";
 	})
 });
 
 
 function updateDisplay(number = "") {
-	if (ERROR_DISPLAYS.includes(displayNumber[dNP])) {
-		document.querySelector("#display").textContent = displayNumber[dNP];
+	if (ERROR_DISPLAYS.includes(displayValues[currentIndex])) {
+		document.querySelector("#display").textContent = displayValues[currentIndex];
 		return;
 	}
-	if (isValidDisplay(displayNumber[dNP], number)) {
+	if (isValidDisplay(displayValues[currentIndex], number)) {
 		// Don't want the following e.g. 032, 00643
-		if (!(number === "") && displayNumber[dNP] === "0") {
-			displayNumber[dNP] = number;
+		if (!(number === "") && displayValues[currentIndex] === "0") {
+			displayValues[currentIndex] = number;
 		} else {
-			displayNumber[dNP] += number;
+			displayValues[currentIndex] += number;
 		}
-		document.querySelector("#display").textContent = displayNumber[dNP];
+		document.querySelector("#display").textContent = displayValues[currentIndex];
 	}
 }
 
@@ -112,28 +98,28 @@ function isValidDisplay(display, input = "") {
 }
 
 function equals() {
-	if (ERROR_DISPLAYS.includes(displayNumber[0])) return;
+	if (ERROR_DISPLAYS.includes(displayValues[0])) return;
 
 	let display = document.querySelector("#display");
 	let displaceHolder;
 
-	if (!selectedOperator) {
+	if (!currentOperator) {
 		displaceHolder = display.textContent;
 		display.textContent = ""; //flashing effect
 		setTimeout( () => {
 			display.textContent = displaceHolder;
-			displayNumber = ["0", "0"];
+			displayValues = ["0", "0"];
 		}, 100 );
 		return;
 	}
 
 	let a, b;
-	[a, b] = displayNumber;
-	let result = selectedOperator(+a, +b)
+	[a, b] = displayValues;
+	let result = currentOperator(+a, +b)
 	result = typeof result === "String" ? result : displayRound(result).toString();
-	dNP = 0;
+	currentIndex = 0;
 	displaceHolder = result.replace("-","").length > 8 ? "error" : result;
-	displayNumber[dNP] = displaceHolder;
+	displayValues[currentIndex] = displaceHolder;
 
 	display.textContent = ""; //flashing effect
 	setTimeout( () => {display.textContent = displaceHolder}, 100);
