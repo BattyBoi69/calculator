@@ -24,7 +24,7 @@ updateDisplay();
 
 let btnNumbers = document.querySelectorAll(".number");
 let btnEquals = document.querySelector("#equals");
-let btnAllClear = document.querySelector("#all-clear");
+let btnAllClear = document.querySelector(".button-wrapper > .all-clear");
 let btnOperators = document.querySelectorAll(".operator");
 
 let btnClear = document.querySelector("#clear");

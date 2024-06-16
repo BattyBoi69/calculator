@@ -4,6 +4,12 @@
 	/* Style-7 http://www.styleseven.com */
 }
 
+@font-face {
+	font-family: "eurostile";
+	src: url("./fonts/eurostile.ttf") format('truetype');
+	/* Style-7 http://www.fontsplace.com */
+}
+
 :root {
 	--key-color: #252527;
 	--case-color: #C8C6C4;
@@ -39,6 +45,42 @@ body {
 	background-clip: border-box;
 	border: 10px solid var(--case-bevel-color);
 	outline: 1px solid var(--case-outline-color);
+}
+
+#top-matter {
+	height: 90px;
+	display: flex;
+}
+
+#top-matter > * {
+	flex: 1;
+	height:100%;
+	width: 100%;
+}
+
+#kazio {
+	font-size: 25px;
+	font-family: "eurostile", "sans-serif";
+	display: flex;
+	align-items: center;
+	padding-left: 20px;
+}
+
+#solar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#solar #panel {
+	background-color: var(--solar-color);
+	height: 100%;
+	width: 80%;
+}
+
+#solar div {
+	font-family: "eurostile";
+	font-size: 12px;
 }
 
 .buttons {
@@ -84,14 +126,11 @@ body {
 .button-wrapper.all-clear::before {
 	content: "";
 	position: absolute;
-	top: 12px;
-	bottom: 12px;
-	left: 1px; /* Adjust this value for the desired width of the "border" */
-	right: 1px; /* Adjust this value for the desired width of the "border" */
+	inset: 12px 1px;
 	border-radius: 6px 6px 14px 14px;
 	border: 2px solid black;
 	background-color: var(--homing-color);
-	z-index: 1; /* Ensure it appears behind the child container */
+	z-index: 1;
 }
 
 .button-wrapper > *:not(.empty):hover {
