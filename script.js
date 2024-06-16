@@ -6,6 +6,7 @@ buttons.forEach(button => {
 	div.classList.add("button-wrapper");
 	if (button.classList.contains("top-row")) div.classList.add("top-row");
 	if (button.classList.contains("add")) div.classList.add("add");
+	if (button.classList.contains("all-clear")) div.classList.add("all-clear");
 
 	div.appendChild(button);
 	

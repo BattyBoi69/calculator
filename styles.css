@@ -4,11 +4,24 @@
 	/* Style-7 http://www.styleseven.com */
 }
 
+:root {
+	--key-color: #252527;
+	--case-color: #C8C6C4;
+	--key-font-color: #CECED0;
+	--case-bevel-color: #D9D8D4;
+	--case-outline-color: #727171;
+	--display-background: #7A7869;
+	--display-border: #494D50;
+	--key-color-alt: #5F2431;
+	--homing-color: #494748;
+	--solar-color: #967E6B;
+}
+
 html {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 *, *:before, *:after {
-  box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 body {
@@ -17,11 +30,15 @@ body {
 
 .calc {
 	margin: 0 auto;
-	width: 420px;
+	width: 425px;
 	display: flex;
 	flex-direction: column;
-	background-color: #C8C6C4;
-	padding: 20px;
+	padding: 0px 5px 10px 5px;
+	background: radial-gradient(ellipse farthest-corner, var(--case-color) 60%, var(--case-bevel-color));
+	border-radius: 25px;
+	background-clip: border-box;
+	border: 10px solid var(--case-bevel-color);
+	outline: 1px solid var(--case-outline-color);
 }
 
 .buttons {
@@ -32,22 +49,58 @@ body {
 
 .button-wrapper {
 	height: 70px;
-	padding: 10px;
+	padding: 8px 5px;
+	min-width: calc(100% / 5 - 10px);
 }
 
 .button-wrapper > * {
-	border-radius: 8px 8px 20px 20px;
-	background-color: pink;
+	border-radius: 10px 10px 23px 23px;
+	background-color: var(--key-color);
+	color: var(--key-font-color);
+	font-size: 25px;
+	font-weight: 500;
 	width: 100%;
 	height: 100%;
+	padding: 0;
 }
 
-.button-wrapper > *:hover {
-	border: 5px solid black;
+.empty {
+	background-color: transparent;
+}
+
+#clear, .button-wrapper > .all-clear {
+	background-color: var(--key-color-alt);
+}
+
+.button-wrapper.all-clear {
+	position: relative;
+}
+
+.button-wrapper > .all-clear {
+	position: relative;
+	z-index: 2;
+}
+
+.button-wrapper.all-clear::before {
+	content: "";
+	position: absolute;
+	top: 12px;
+	bottom: 12px;
+	left: 1px; /* Adjust this value for the desired width of the "border" */
+	right: 1px; /* Adjust this value for the desired width of the "border" */
+	border-radius: 6px 6px 14px 14px;
+	border: 2px solid black;
+	background-color: var(--homing-color);
+	z-index: 1; /* Ensure it appears behind the child container */
+}
+
+.button-wrapper > *:not(.empty):hover {
+	border: 4px solid black;
 }
 
 .button-wrapper.top-row {
 	height: 50px;
+	padding: 5px 5px;
 }
 
 .button-wrapper.add {
@@ -58,9 +111,10 @@ body {
 	font-family: "digitalseven", "Courier New", serif;
 	font-size: 100px;
 	height: 140px;
-	background-color: lightgreen;
+	background-color: var(--display-background);
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
-	margin: 10px 20px 0px 20px;
+	margin: 2px;
+	border: 10px 15px 20px 15px solid var(--display-border);
 }
