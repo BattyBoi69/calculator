@@ -166,7 +166,7 @@ body {
 
 .button-wrapper.top-row {
 	height: 50px;
-	padding: 5px 5px;
+	padding: 8px 5px 5px 5px;
 }
 
 .button-wrapper.add {
@@ -175,12 +175,15 @@ body {
 
 #display {
 	font-family: "digitalseven", "Courier New", serif;
-	font-size: 100px;
+	font-size: 80px;
 	height: 140px;
 	background-color: var(--display-background);
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
 	margin: 2px;
-	border: 10px 15px 20px 15px solid var(--display-border);
+	border: solid var(--display-border);
+	border-width: 10px 15px 20px 15px; 
+	border-radius: 6px;
+	padding-right: 8px;
 }
