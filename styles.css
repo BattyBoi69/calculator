@@ -124,6 +124,8 @@ body {
 
 .button-wrapper > * {
 	border-radius: 10px 10px 23px 23px;
+	border: solid black;
+	font-family: sans-serif;
 	background-color: var(--key-color);
 	color: var(--key-font-color);
 	font-size: 25px;
@@ -135,6 +137,7 @@ body {
 
 .empty {
 	background-color: transparent;
+	border: transparent;
 }
 
 #clear, .button-wrapper > .all-clear {
